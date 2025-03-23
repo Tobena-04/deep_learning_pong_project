@@ -1,8 +1,10 @@
+#include <chrono>
 #include <SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "include/Ball.h"
 #include "include/Paddle.h"
 #include "include/PlayerScore.h"
+#include "include/Constants.h"
 
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
@@ -32,18 +34,32 @@ int main()
                  (WINDOW_HEIGHT/2.0f)-(BALL_WIDTH/2.0f)));
 
     // Create the paddles
-    Paddle paddleOne(
-            Vec2(50.0f, (WINDOW_HEIGHT/2.0f)-(PADDLE_HEIGHT/2.0f)));
+    Paddle paddleOne(Vec2(50.0f, (WINDOW_HEIGHT/2.0f)-(PADDLE_HEIGHT/2.0f)),
+            Vec2(0.0f, 0.0f));
 
     Paddle paddleTwo(
-            Vec2(WINDOW_WIDTH - 50.0f, (WINDOW_HEIGHT/2.0f) - (PADDLE_HEIGHT/2.0f)));
+            Vec2(WINDOW_WIDTH - 50.0f, (WINDOW_HEIGHT/2.0f) - (PADDLE_HEIGHT/2.0f)),
+            Vec2(0.0f, 0.0f));
 
     // Game logic
     {
+        enum Buttons
+        {
+            PaddleOneUp = 0,
+            PaddleOneDown,
+            PaddleTwoUp,
+            PaddleTwoDown,
+        };
+        const float PADDLE_SPEED = 1.0f;
+
         bool running = true;
+        bool buttons[4] = {};
+
+        float dt = 0.0f;
 
         // Continue looping and processing events until user exits
         while (running){
+            auto startTime = std::chrono::high_resolution_clock ::now();
             SDL_Event event;
             while (SDL_PollEvent(&event)){
                 if (event.type == SDL_QUIT){
@@ -85,6 +101,11 @@ int main()
 
             // Present the backbuffer
             SDL_RenderPresent(renderer);
+
+            // Calculate frame time
+            auto stopTime = std::chrono::high_resolution_clock::now();
+            dt = std::chrono::duration<float, std::chrono::milliseconds::period>
+                    (stopTime - startTime).count();
         }
     }
 

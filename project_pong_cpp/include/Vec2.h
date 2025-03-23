@@ -5,6 +5,7 @@
 #ifndef PROJECT_PONG_CPP_VEC2_H
 #define PROJECT_PONG_CPP_VEC2_H
 
+#include "Constants.h"
 
 class Vec2 {
 public:

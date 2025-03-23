@@ -6,6 +6,7 @@
 #define PROJECT_PONG_CPP_BALL_H
 
 #include "Vec2.h"
+#include "Constants.h"
 #include <SDL.h>
 
 const int BALL_WIDTH = 15;
