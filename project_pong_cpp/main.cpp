@@ -6,9 +6,6 @@
 #include "include/PlayerScore.h"
 #include "include/Constants.h"
 
-const int WINDOW_WIDTH = 1280;
-const int WINDOW_HEIGHT = 720;
-
 int main()
 {
     // Initializing SDL components
@@ -50,7 +47,6 @@ int main()
             PaddleTwoUp,
             PaddleTwoDown,
         };
-        const float PADDLE_SPEED = 1.0f;
 
         bool running = true;
         bool buttons[4] = {};
@@ -67,9 +63,48 @@ int main()
                 } else if (event.type == SDL_KEYDOWN){
                     if (event.key.keysym.sym == SDLK_ESCAPE){
                         running = false;
+                    } else if (event.key.keysym.sym == SDLK_w){
+                        buttons[Buttons::PaddleOneUp] = true;
+                    } else if (event.key.keysym.sym == SDLK_s){
+                        buttons[Buttons::PaddleOneDown] = true;
+                    } else if (event.key.keysym.sym == SDLK_UP){
+                        buttons[Buttons::PaddleTwoUp] = true;
+                    } else if (event.key.keysym.sym == SDLK_DOWN){
+                        buttons[Buttons::PaddleTwoDown] = true;
+                    }
+                } else if (event.type == SDL_KEYUP) {
+                    if (event.key.keysym.sym == SDLK_w){
+                        buttons[Buttons::PaddleOneUp] = false;
+                    } else if (event.key.keysym.sym == SDLK_s){
+                        buttons[Buttons::PaddleOneDown] = false;
+                    } else if (event.key.keysym.sym == SDLK_UP){
+                        buttons[Buttons::PaddleTwoUp] = false;
+                    } else if (event.key.keysym.sym == SDLK_DOWN){
+                        buttons[Buttons::PaddleTwoDown] = false;
                     }
                 }
             }
+
+            // Change paddle velocity on button press
+            if (buttons[Buttons::PaddleOneUp]){
+                paddleOne.velocity.y = -PADDLE_SPEED;
+            } else if (buttons[Buttons::PaddleOneDown]){
+                paddleOne.velocity.y = PADDLE_SPEED;
+            } else{
+                paddleOne.velocity.y = 0.0f;
+            }
+
+            if (buttons[Buttons::PaddleTwoUp]){
+                paddleTwo.velocity.y = -PADDLE_SPEED;
+            } else if (buttons[Buttons::PaddleTwoDown]){
+                paddleTwo.velocity.y = PADDLE_SPEED;
+            } else{
+                paddleTwo.velocity.y = 0.0f;
+            }
+
+            // Update paddle positions
+            paddleOne.Update(dt);
+            paddleTwo.Update(dt);
 
             // Clear the window to black
             SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
