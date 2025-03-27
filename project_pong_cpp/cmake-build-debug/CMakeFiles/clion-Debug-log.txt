@@ -1,0 +1,19 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp -B /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/cmake-build-debug
+CMake Error at CMakeLists.txt:8 (find_package):
+  By not providing "FindSDL2.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "SDL2", but
+  CMake did not find one.
+
+  Could not find a package configuration file provided by "SDL2" with any of
+  the following names:
+
+    SDL2Config.cmake
+    sdl2-config.cmake
+
+  Add the installation prefix of "SDL2" to CMAKE_PREFIX_PATH or set
+  "SDL2_DIR" to a directory containing one of the above files.  If "SDL2"
+  provides a separate development package or SDK, be sure it has been
+  installed.
+
+
+-- Configuring incomplete, errors occurred!
