@@ -93,7 +93,7 @@ int main()
                                           WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // Initialize the font
+    // Initialize the font - TODO: change this line
     TTF_Font* scoreFont = TTF_OpenFont("/Users/tobennaudeze/Library/Fonts/DejaVuSansMono.ttf",
                                        40);
 
