@@ -2,9 +2,86 @@
 #include <SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "include/Ball.h"
+#include "include/Composites.h"
+#include "include/Constants.h"
 #include "include/Paddle.h"
 #include "include/PlayerScore.h"
-#include "include/Constants.h"
+
+Contact CheckPaddleCollision(Ball const& ball, Paddle const& paddle)
+{
+    float ballLeft = ball.position.x;
+    float ballRight = ball.position.x + BALL_WIDTH;
+    float ballTop = ball.position.y;
+    float ballBottom = ball.position.y + BALL_HEIGHT;
+
+    float paddleLeft = paddle.position.x;
+    float paddleRight = paddle.position.x + PADDLE_WIDTH;
+    float paddleTop = paddle.position.y;
+    float paddleBottom = paddle.position.y + PADDLE_HEIGHT;
+
+    Contact contact{};
+
+    if (ballLeft >= paddleRight){
+        return contact;
+    }
+
+    if (ballRight <= paddleLeft){
+        return contact;
+    }
+
+    if (ballTop >= paddleBottom){
+        return contact;
+    }
+
+    if (ballBottom <= paddleTop){
+        return contact;
+    }
+
+    float paddleRangeUpper = paddleBottom - (2.0f * PADDLE_HEIGHT/3.0f);
+    float paddleRangeMiddle = paddleBottom - (PADDLE_HEIGHT / 3.0f);
+
+    if (ball.velocity.x < 0){
+        // Left paddle
+        contact.penetration = paddleRight - ballLeft;
+    } else if (ball.velocity.x > 0){
+        // Right paddle
+        contact.penetration = paddleLeft - ballRight;
+    }
+
+    if ((ballBottom > paddleTop) && (ballBottom < paddleRangeUpper)){
+        contact.type = CollisionType::Top;
+    } else if ((ballBottom > paddleRangeUpper) && (ballBottom < paddleRangeUpper)){
+        contact.type = CollisionType::Middle;
+    } else{
+        contact.type = CollisionType::Bottom;
+    }
+
+    return contact;
+}
+
+Contact CheckWallCollision(Ball const& ball)
+{
+    float ballLeft = ball.position.x;
+    float ballRight = ball.position.x + BALL_WIDTH;
+    float ballTop = ball.position.y;
+    float ballBottom = ball.position.y + BALL_HEIGHT;
+
+    Contact contact{};
+
+    if (ballLeft < 0.0f){
+        contact.type = CollisionType::Left;
+    } else if (ballRight > WINDOW_WIDTH){
+        contact.type = CollisionType::Right;
+    } else if (ballTop < 0.0f){
+        contact.type = CollisionType::Top;
+        contact.penetration = -ballTop;
+    } else if (ballBottom > WINDOW_HEIGHT){
+        contact.type = CollisionType::Bottom;
+        contact.penetration = WINDOW_HEIGHT - ballBottom;
+    }
+
+    return contact;
+}
 
 int main()
 {
@@ -27,8 +104,8 @@ int main()
 
     // Create the ball
     Ball ball(
-            Vec2((WINDOW_WIDTH/2.0f) - (BALL_WIDTH/2.0f),
-                 (WINDOW_HEIGHT/2.0f)-(BALL_WIDTH/2.0f)));
+            Vec2(WINDOW_WIDTH/2.0f,WINDOW_HEIGHT/2.0f),
+            Vec2(BALL_SPEED, 0.0f));
 
     // Create the paddles
     Paddle paddleOne(Vec2(50.0f, (WINDOW_HEIGHT/2.0f)-(PADDLE_HEIGHT/2.0f)),
@@ -40,13 +117,8 @@ int main()
 
     // Game logic
     {
-        enum Buttons
-        {
-            PaddleOneUp = 0,
-            PaddleOneDown,
-            PaddleTwoUp,
-            PaddleTwoDown,
-        };
+        int playerOneScore = 0;
+        int playerTwoScore = 0;
 
         bool running = true;
         bool buttons[4] = {};
@@ -105,6 +177,30 @@ int main()
             // Update paddle positions
             paddleOne.Update(dt);
             paddleTwo.Update(dt);
+
+            // Update ball positions
+            ball.Update(dt);
+
+            // Check collisions
+           if (Contact contact = CheckPaddleCollision(ball, paddleOne);
+           contact.type != CollisionType::None){
+               ball.CollideWithPaddle(contact);
+           } else if (contact = CheckPaddleCollision(ball, paddleTwo);
+           contact.type != CollisionType::None){
+               ball.CollideWithPaddle(contact);
+           } else if (contact = CheckWallCollision(ball);
+           contact.type != CollisionType::None){
+               ball.CollideWithWall(contact);
+
+               if (contact.type == CollisionType::Left){
+                   ++playerTwoScore;
+                   playerTwoScoreText.SetScore(playerTwoScore);
+               } else if (contact.type == CollisionType::Right){
+                   ++playerOneScore;
+
+                   playerOneScoreText.SetScore(playerOneScore);
+               }
+           }
 
             // Clear the window to black
             SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);

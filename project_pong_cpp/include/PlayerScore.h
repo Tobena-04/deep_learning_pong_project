@@ -15,6 +15,7 @@ public:
     ~PlayerScore();
     void Draw();
     SDL_Renderer* renderer;
+    void SetScore(int score);
     TTF_Font* font;
     SDL_Surface* surface{};
     SDL_Texture* texture{};

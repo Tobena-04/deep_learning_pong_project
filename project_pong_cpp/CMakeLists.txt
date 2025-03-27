@@ -24,7 +24,9 @@ add_executable(project_pong_cpp main.cpp
         src/Paddle.cpp
         src/PlayerScore.cpp
         include/PlayerScore.h
-        include/Constants.h)
+        include/Constants.h
+        include/Composites.h
+)
 
 target_link_libraries(project_pong_cpp
         ${SDL2_LIBRARIES}
