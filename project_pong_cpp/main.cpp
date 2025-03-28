@@ -130,7 +130,7 @@ int main()
             auto startTime = std::chrono::high_resolution_clock ::now();
             SDL_Event event;
             while (SDL_PollEvent(&event)){
-                if (event.type == SDL_QUIT){
+                if (event.type == SDL_QUIT || playerOneScore == 10 || playerTwoScore == 10){
                     running = false;
                 } else if (event.type == SDL_KEYDOWN){
                     if (event.key.keysym.sym == SDLK_ESCAPE){
@@ -195,9 +195,9 @@ int main()
                if (contact.type == CollisionType::Left){
                    ++playerTwoScore;
                    playerTwoScoreText.SetScore(playerTwoScore);
+                   
                } else if (contact.type == CollisionType::Right){
                    ++playerOneScore;
-
                    playerOneScoreText.SetScore(playerOneScore);
                }
            }
