@@ -30,3 +30,7 @@ TTF_Font* scoreFont = TTF_OpenFont("/Users/*username*/Library/Fonts/DejaVuSansMo
 change line 97 (it has been marked as TODO) to your own path. this is for mac users.
 
 when this is done, you should be able to run our pong!
+=======
+# deep_learning_pong_project
+
+This repo contains the learning task for our deep learning network.
