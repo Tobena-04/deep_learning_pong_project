@@ -8,9 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/main.cpp" "CMakeFiles/project_pong_cpp.dir/main.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/main.cpp.o.d"
-  "/Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/ball.cpp" "CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o.d"
-  "/Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/vec2.cpp" "CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o.d"
+  "/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/main.cpp" "CMakeFiles/project_pong_cpp.dir/main.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/main.cpp.o.d"
+  "/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Ball.cpp" "CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o.d"
+  "/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Paddle.cpp" "CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o.d"
+  "/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/PlayerScore.cpp" "CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o.d"
+  "/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Vec2.cpp" "CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o" "gcc" "CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

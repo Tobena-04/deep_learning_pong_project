@@ -1,10 +1,14 @@
 file(REMOVE_RECURSE
   "CMakeFiles/project_pong_cpp.dir/main.cpp.o"
   "CMakeFiles/project_pong_cpp.dir/main.cpp.o.d"
-  "CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o"
-  "CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o.d"
-  "CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o"
-  "CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o.d"
+  "CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o"
+  "CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o.d"
+  "CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o"
+  "CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o.d"
+  "CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o"
+  "CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o.d"
+  "CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o"
+  "CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o.d"
   "project_pong_cpp"
   "project_pong_cpp.pdb"
 )

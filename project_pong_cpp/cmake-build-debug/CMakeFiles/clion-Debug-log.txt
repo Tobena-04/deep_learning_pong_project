@@ -1,4 +1,6 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp -B /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/cmake-build-debug
--- Configuring done (0.1s)
--- Generating done (0.0s)
--- Build files have been written to: /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/cmake-build-debug
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp -B /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/cmake-build-debug
+CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+  CMake 3.30 or higher is required.  You are running version 3.28.1
+
+
+-- Configuring incomplete, errors occurred!

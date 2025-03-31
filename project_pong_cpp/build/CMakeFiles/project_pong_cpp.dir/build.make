@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp
+CMAKE_SOURCE_DIR = /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build
+CMAKE_BINARY_DIR = /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/project_pong_cpp.dir/depend.make
@@ -73,63 +73,96 @@ CMakeFiles/project_pong_cpp.dir/codegen:
 .PHONY : CMakeFiles/project_pong_cpp.dir/codegen
 
 CMakeFiles/project_pong_cpp.dir/main.cpp.o: CMakeFiles/project_pong_cpp.dir/flags.make
-CMakeFiles/project_pong_cpp.dir/main.cpp.o: /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/main.cpp
+CMakeFiles/project_pong_cpp.dir/main.cpp.o: /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/main.cpp
 CMakeFiles/project_pong_cpp.dir/main.cpp.o: CMakeFiles/project_pong_cpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/project_pong_cpp.dir/main.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/main.cpp.o -MF CMakeFiles/project_pong_cpp.dir/main.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/main.cpp.o -c /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/project_pong_cpp.dir/main.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/main.cpp.o -MF CMakeFiles/project_pong_cpp.dir/main.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/main.cpp.o -c /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/main.cpp
 
 CMakeFiles/project_pong_cpp.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/project_pong_cpp.dir/main.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/main.cpp > CMakeFiles/project_pong_cpp.dir/main.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/main.cpp > CMakeFiles/project_pong_cpp.dir/main.cpp.i
 
 CMakeFiles/project_pong_cpp.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/project_pong_cpp.dir/main.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/main.cpp -o CMakeFiles/project_pong_cpp.dir/main.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/main.cpp -o CMakeFiles/project_pong_cpp.dir/main.cpp.s
 
-CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o: CMakeFiles/project_pong_cpp.dir/flags.make
-CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o: /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/ball.cpp
-CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o: CMakeFiles/project_pong_cpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o -MF CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o -c /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/ball.cpp
+CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o: CMakeFiles/project_pong_cpp.dir/flags.make
+CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o: /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Ball.cpp
+CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o: CMakeFiles/project_pong_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o -MF CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o -c /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Ball.cpp
 
-CMakeFiles/project_pong_cpp.dir/src/ball.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/project_pong_cpp.dir/src/ball.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/ball.cpp > CMakeFiles/project_pong_cpp.dir/src/ball.cpp.i
+CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Ball.cpp > CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.i
 
-CMakeFiles/project_pong_cpp.dir/src/ball.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/project_pong_cpp.dir/src/ball.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/ball.cpp -o CMakeFiles/project_pong_cpp.dir/src/ball.cpp.s
+CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Ball.cpp -o CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.s
 
-CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o: CMakeFiles/project_pong_cpp.dir/flags.make
-CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o: /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/vec2.cpp
-CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o: CMakeFiles/project_pong_cpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o -MF CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o -c /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/vec2.cpp
+CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o: CMakeFiles/project_pong_cpp.dir/flags.make
+CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o: /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Vec2.cpp
+CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o: CMakeFiles/project_pong_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o -MF CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o -c /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Vec2.cpp
 
-CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/vec2.cpp > CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.i
+CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Vec2.cpp > CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.i
 
-CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/src/vec2.cpp -o CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.s
+CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Vec2.cpp -o CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.s
+
+CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o: CMakeFiles/project_pong_cpp.dir/flags.make
+CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o: /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Paddle.cpp
+CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o: CMakeFiles/project_pong_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o -MF CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o -c /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Paddle.cpp
+
+CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Paddle.cpp > CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.i
+
+CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/Paddle.cpp -o CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.s
+
+CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o: CMakeFiles/project_pong_cpp.dir/flags.make
+CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o: /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/PlayerScore.cpp
+CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o: CMakeFiles/project_pong_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o -MF CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o.d -o CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o -c /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/PlayerScore.cpp
+
+CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/PlayerScore.cpp > CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.i
+
+CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/src/PlayerScore.cpp -o CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.s
 
 # Object files for target project_pong_cpp
 project_pong_cpp_OBJECTS = \
 "CMakeFiles/project_pong_cpp.dir/main.cpp.o" \
-"CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o" \
-"CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o"
+"CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o" \
+"CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o" \
+"CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o" \
+"CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o"
 
 # External object files for target project_pong_cpp
 project_pong_cpp_EXTERNAL_OBJECTS =
 
 project_pong_cpp: CMakeFiles/project_pong_cpp.dir/main.cpp.o
-project_pong_cpp: CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o
-project_pong_cpp: CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o
+project_pong_cpp: CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o
+project_pong_cpp: CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o
+project_pong_cpp: CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o
+project_pong_cpp: CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o
 project_pong_cpp: CMakeFiles/project_pong_cpp.dir/build.make
 project_pong_cpp: /opt/homebrew/Cellar/sdl2/2.32.2/lib/libSDL2.dylib
+project_pong_cpp: /opt/homebrew/cellar/sdl2_ttf/2.24.0/lib/libSDL2_ttf.dylib
 project_pong_cpp: CMakeFiles/project_pong_cpp.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable project_pong_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable project_pong_cpp"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/project_pong_cpp.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -141,6 +174,6 @@ CMakeFiles/project_pong_cpp.dir/clean:
 .PHONY : CMakeFiles/project_pong_cpp.dir/clean
 
 CMakeFiles/project_pong_cpp.dir/depend:
-	cd /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build/CMakeFiles/project_pong_cpp.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles/project_pong_cpp.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/project_pong_cpp.dir/depend
 

@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp
+CMAKE_SOURCE_DIR = /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build
+CMAKE_BINARY_DIR = /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build/CMakeFiles /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/tobennaudeze/Desktop/academics/CS/4267/project_pong_cpp/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/fardeenb/Documents/Projects/deep_learning_pong_project/project_pong_cpp/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -153,53 +153,101 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-src/ball.o: src/ball.cpp.o
-.PHONY : src/ball.o
+src/Ball.o: src/Ball.cpp.o
+.PHONY : src/Ball.o
 
 # target to build an object file
-src/ball.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/ball.cpp.o
-.PHONY : src/ball.cpp.o
+src/Ball.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.o
+.PHONY : src/Ball.cpp.o
 
-src/ball.i: src/ball.cpp.i
-.PHONY : src/ball.i
+src/Ball.i: src/Ball.cpp.i
+.PHONY : src/Ball.i
 
 # target to preprocess a source file
-src/ball.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/ball.cpp.i
-.PHONY : src/ball.cpp.i
+src/Ball.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.i
+.PHONY : src/Ball.cpp.i
 
-src/ball.s: src/ball.cpp.s
-.PHONY : src/ball.s
+src/Ball.s: src/Ball.cpp.s
+.PHONY : src/Ball.s
 
 # target to generate assembly for a file
-src/ball.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/ball.cpp.s
-.PHONY : src/ball.cpp.s
+src/Ball.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Ball.cpp.s
+.PHONY : src/Ball.cpp.s
 
-src/vec2.o: src/vec2.cpp.o
-.PHONY : src/vec2.o
+src/Paddle.o: src/Paddle.cpp.o
+.PHONY : src/Paddle.o
 
 # target to build an object file
-src/vec2.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.o
-.PHONY : src/vec2.cpp.o
+src/Paddle.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.o
+.PHONY : src/Paddle.cpp.o
 
-src/vec2.i: src/vec2.cpp.i
-.PHONY : src/vec2.i
+src/Paddle.i: src/Paddle.cpp.i
+.PHONY : src/Paddle.i
 
 # target to preprocess a source file
-src/vec2.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.i
-.PHONY : src/vec2.cpp.i
+src/Paddle.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.i
+.PHONY : src/Paddle.cpp.i
 
-src/vec2.s: src/vec2.cpp.s
-.PHONY : src/vec2.s
+src/Paddle.s: src/Paddle.cpp.s
+.PHONY : src/Paddle.s
 
 # target to generate assembly for a file
-src/vec2.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/vec2.cpp.s
-.PHONY : src/vec2.cpp.s
+src/Paddle.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Paddle.cpp.s
+.PHONY : src/Paddle.cpp.s
+
+src/PlayerScore.o: src/PlayerScore.cpp.o
+.PHONY : src/PlayerScore.o
+
+# target to build an object file
+src/PlayerScore.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.o
+.PHONY : src/PlayerScore.cpp.o
+
+src/PlayerScore.i: src/PlayerScore.cpp.i
+.PHONY : src/PlayerScore.i
+
+# target to preprocess a source file
+src/PlayerScore.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.i
+.PHONY : src/PlayerScore.cpp.i
+
+src/PlayerScore.s: src/PlayerScore.cpp.s
+.PHONY : src/PlayerScore.s
+
+# target to generate assembly for a file
+src/PlayerScore.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/PlayerScore.cpp.s
+.PHONY : src/PlayerScore.cpp.s
+
+src/Vec2.o: src/Vec2.cpp.o
+.PHONY : src/Vec2.o
+
+# target to build an object file
+src/Vec2.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.o
+.PHONY : src/Vec2.cpp.o
+
+src/Vec2.i: src/Vec2.cpp.i
+.PHONY : src/Vec2.i
+
+# target to preprocess a source file
+src/Vec2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.i
+.PHONY : src/Vec2.cpp.i
+
+src/Vec2.s: src/Vec2.cpp.s
+.PHONY : src/Vec2.s
+
+# target to generate assembly for a file
+src/Vec2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project_pong_cpp.dir/build.make CMakeFiles/project_pong_cpp.dir/src/Vec2.cpp.s
+.PHONY : src/Vec2.cpp.s
 
 # Help Target
 help:
@@ -213,12 +261,18 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... src/ball.o"
-	@echo "... src/ball.i"
-	@echo "... src/ball.s"
-	@echo "... src/vec2.o"
-	@echo "... src/vec2.i"
-	@echo "... src/vec2.s"
+	@echo "... src/Ball.o"
+	@echo "... src/Ball.i"
+	@echo "... src/Ball.s"
+	@echo "... src/Paddle.o"
+	@echo "... src/Paddle.i"
+	@echo "... src/Paddle.s"
+	@echo "... src/PlayerScore.o"
+	@echo "... src/PlayerScore.i"
+	@echo "... src/PlayerScore.s"
+	@echo "... src/Vec2.o"
+	@echo "... src/Vec2.i"
+	@echo "... src/Vec2.s"
 .PHONY : help
 
 

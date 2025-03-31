@@ -42,4 +42,5 @@ path/*
 *.app
 =======
 .idea/
-project_pong_cpp/cmake-build-debug/CMakeFiles/clion-Debug-log.txt
+project_pong_cpp/cmake-build-debug/
+project_pong_cpp/build/
