@@ -40,7 +40,7 @@ path/*
 *.exe
 *.out
 *.app
-=======
+
 .idea/
 project_pong_cpp/cmake-build-debug/
-project_pong_cpp/build/
+project_pong_cpp/build
