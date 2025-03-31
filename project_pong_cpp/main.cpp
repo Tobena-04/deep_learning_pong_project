@@ -1,6 +1,7 @@
 #include <chrono>
 #include <SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <cstdlib>
 #include "include/Ball.h"
 #include "include/Composites.h"
 #include "include/Constants.h"
@@ -93,9 +94,8 @@ int main()
                                           WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // Initialize the font - TODO: change this line
-    TTF_Font* scoreFont = TTF_OpenFont("/Users/tobennaudeze/Library/Fonts/DejaVuSansMono.ttf",
-                                       40);
+    std::string fontPath = std::string(getenv("HOME")) + "/Library/Fonts/DejaVuSansMono.ttf";
+    TTF_Font* scoreFont = TTF_OpenFont(fontPath.c_str(), 40);
 
     // Create the player score text fields
     PlayerScore playerOneScoreText(Vec2(WINDOW_WIDTH/4.0f, 20.0f), renderer, scoreFont);
