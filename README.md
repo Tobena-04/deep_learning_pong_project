@@ -27,12 +27,9 @@ Avoid running this project in VS Code unless your C++ environment is properly se
 
 ### Font Configuration
 
-Ensure the required fonts are accessible, as they are stored in a specific directory on your machine. Update the font path in the code:
+Ensure the required font is in your Font Book, as they should be stored in that application here: 
 
 `TTF_Font* scoreFont = TTF_OpenFont("/Users/*username*/Library/Fonts/DejaVuSansMono.ttf", 40);`
-
-
-Modify line 97 (marked as TODO) with the correct path to your font file. This step is necessary for Mac users.
 
 ## Running the Project
 
