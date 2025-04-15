@@ -2,12 +2,13 @@
 #include <SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <cstdlib>
+#include <iostream>
 #include "include/Ball.h"
 #include "include/Composites.h"
 #include "include/Constants.h"
 #include "include/Paddle.h"
 #include "include/PlayerScore.h"
-#include "include/RLInterface.h"  // Added RLInterface include
+#include "include/RLInterface.h"
 
 Contact CheckPaddleCollision(Ball const& ball, Paddle const& paddle)
 {
