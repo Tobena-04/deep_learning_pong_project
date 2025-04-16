@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.28.1)
 project(project_pong_cpp)
 
 set(CMAKE_CXX_STANDARD 20)
 
-list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew") # make changes here
+list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)   
@@ -12,7 +12,7 @@ include_directories(
         ${SDL2_INCLUDE_DIRS}
         ${SDL2_TTF_INCLUDE_DIRS}
         ${SDL2_IMAGE_INCLUDE_DIRS}
-        /opt/homebrew/cellar/sdl2_ttf/2.24.0/include # make changes here
+        /opt/homebrew/cellar/sdl2_ttf/2.24.0/include
 )
 
 add_executable(project_pong_cpp main.cpp
@@ -26,6 +26,7 @@ add_executable(project_pong_cpp main.cpp
         include/PlayerScore.h
         include/Constants.h
         include/Composites.h
+        include/RLInterface.h
 )
 
 target_link_libraries(project_pong_cpp
