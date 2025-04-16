@@ -120,7 +120,6 @@ class PongRLTrainer:
                             }
                             return state
                     # If we get here, the file exists but doesn't have valid data
-                    time.sleep(0.1)
             except (FileNotFoundError, ValueError):
                 time.sleep(0.1)
 
@@ -228,7 +227,7 @@ class PongRLTrainer:
 
         return loss.item()
 
-    def train(self, episodes=1000, max_steps_per_episode=5000):
+    def train(self, episodes=1000, max_steps_per_episode=1000):
         """Train the agent for a number of episodes"""
         if not self.start_game():
             print("Failed to start game. Aborting training.")
@@ -240,7 +239,7 @@ class PongRLTrainer:
 
         for episode in range(episodes):
             # Wait a bit for the game to reset
-            time.sleep(1)
+            time.sleep(0.01)
 
             # Reset tracking variables
             episode_reward = 0
@@ -271,7 +270,7 @@ class PongRLTrainer:
                 # Get new state
                 new_state = self.get_game_state()
 
-                # Check if game is done (someone reached 10 points)
+                # Check if game is done (someone reached 10 points)ss
                 done = self.check_game_done()
 
                 # Calculate reward

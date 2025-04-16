@@ -84,19 +84,6 @@ class PongTrainer:
         time.sleep(2)
 
 
-    # def start_game(self):
-    #     """Start the Pong game"""
-    #     # If game is already running, terminate it
-    #     if self.game_process:
-    #         self.game_process.terminate()
-    #         time.sleep(1)
-    #
-    #     # Start the game process
-    #     executable_path = os.path.join(os.getcwd(), "build/project_pong_cpp")
-    #     self.game_process = subprocess.Popen(executable_path)
-    #
-    #     # Wait for game to start
-    #     time.sleep(2)
 
     def get_state_vector(self, game_state):
         """Convert game state to a vector for the neural network"""

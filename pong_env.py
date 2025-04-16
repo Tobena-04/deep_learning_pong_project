@@ -4,11 +4,12 @@ import pyautogui
 import time
 import gymnasium as gym
 from gymnasium import spaces
+from game_state import get_game_state
 
 class PongEnv(gym.Env):
     def __init__(self):
         super(PongEnv, self).__init__()
-        # Action anad observation space
+        # Action and observation space
         self.action_space = spaces.Discrete(3)  # 0: do nothing, 1: up, 2: down
 
         # We'll use a preprocessed image as our state
@@ -65,8 +66,10 @@ class PongEnv(gym.Env):
 
     def get_score(self):
         """Extract score from the screen using OCR or pixel-based detection"""
-        # Placeholder for score detection
-        # You could use OCR or look for specific pixel patterns
+        screenshot = pyautogui.screenshot(region=(0,0,self.game_width, self.game_height))
+        screen_np = np.array(screenshot)
+        state = get_game_state(screen_np)
+        return state['right_score'], state['left_score']
 
 
         # the score values are at the middle top of the screenshots

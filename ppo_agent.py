@@ -6,6 +6,9 @@ import numpy as np
 import gymnasium as gym
 from torch.distributions import Categorical
 
+from pong_env import PongEnv
+
+
 # Define the neural network architecture
 class PPONetwork(nn.Module):
     def __init__(self):
@@ -38,7 +41,7 @@ class PPONetwork(nn.Module):
         x = F.relu(self.conv3(x))
 
         # Flatten
-        x = x.view(x.size(0), -1)
+        x = x.reshape(x.size(0), -1)
 
         # Apply FC layer
         x = F.relu(self.fc1(x))
@@ -67,7 +70,8 @@ class PPOAgent:
 
     def select_action(self, state, memory=None):
         with torch.no_grad():
-            state = torch.FloatTensor(state).to(self.device)
+            state = torch.FloatTensor(state).float().to(self.device)
+            state = state.astype(np.float32)
             action_probs, state_value = self.policy_old(state)
 
         # Sample action from the probability distribution
@@ -201,6 +205,8 @@ def train_pong():
         # Save the model
         if episode % 50 == 0:
             torch.save(agent.policy.state_dict(), f"pong_policy_episode_{episode}.pth")
+
+
 
     env.close()
 

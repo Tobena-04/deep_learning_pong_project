@@ -12,7 +12,7 @@ inline constexpr int BALL_WIDTH = 15;
 inline constexpr int BALL_HEIGHT = 15;
 inline constexpr int PADDLE_WIDTH = 10;
 inline constexpr int PADDLE_HEIGHT = 100;
-inline constexpr float PADDLE_SPEED = 1.0f;
-inline constexpr float BALL_SPEED = 1.0f;
+inline constexpr float PADDLE_SPEED = 5.0f;
+inline constexpr float BALL_SPEED = 5.0f;
 
 #endif
