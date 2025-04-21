@@ -3,6 +3,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <cstdlib>
 #include <iostream>
+#include <random>
 #include "include/Ball.h"
 #include "include/Composites.h"
 #include "include/Constants.h"
@@ -147,10 +148,6 @@ int main(int argc, char* argv[])  // Added argc and argv parameters for command 
                 } else if (event.type == SDL_KEYDOWN){
                     if (event.key.keysym.sym == SDLK_ESCAPE){
                         running = false;
-                    } else if (event.key.keysym.sym == SDLK_w){
-                        buttons[Buttons::PaddleOneUp] = true;
-                    } else if (event.key.keysym.sym == SDLK_s){
-                        buttons[Buttons::PaddleOneDown] = true;
                     } else if (event.key.keysym.sym == SDLK_UP){
                         buttons[Buttons::PaddleTwoUp] = true;
                     } else if (event.key.keysym.sym == SDLK_DOWN){
@@ -169,13 +166,36 @@ int main(int argc, char* argv[])  // Added argc and argv parameters for command 
                 }
             }
 
-            // Change paddle velocity on button press
-            if (buttons[Buttons::PaddleOneUp]){
-                paddleOne.velocity.y = -PADDLE_SPEED;
-            } else if (buttons[Buttons::PaddleOneDown]){
-                paddleOne.velocity.y = PADDLE_SPEED;
-            } else{
-                paddleOne.velocity.y = 0.0f;
+            // Add CPU control logic for paddleOne (before paddle.Update() calls)
+            // CPU paddle logic: Follow the ball's Y position
+            const float cpuPaddleCenter = paddleOne.position.y + (PADDLE_HEIGHT/2.0f);
+            const float ballCenter = ball.position.y + (BALL_HEIGHT/2.0f);
+
+            // 10% chance to make the wrong move (adjust as needed)
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<> dis(-30.0, 30.0);
+            std::bernoulli_distribution mistakeDist(0.08);
+
+            float targetY = ballCenter + dis(gen);
+            bool makeMistake = mistakeDist(gen);
+
+            if (makeMistake) {
+                // Invert the movement logic
+                if (cpuPaddleCenter > targetY + 20.0f) {
+                    paddleOne.velocity.y = PADDLE_SPEED;  // Wrong direction
+                }
+                else if (cpuPaddleCenter < targetY - 20.0f) {
+                    paddleOne.velocity.y = -PADDLE_SPEED;  // Wrong direction
+                }
+            } else {
+                if (cpuPaddleCenter > targetY + 20.0f) {  // Add small threshold to prevent jitter
+                    paddleOne.velocity.y = -PADDLE_SPEED;
+                } else if (cpuPaddleCenter < targetY - 20.0f) {
+                    paddleOne.velocity.y = PADDLE_SPEED;
+                } else {
+                    paddleOne.velocity.y = 0.0f;
+                }
             }
 
             // Only control paddle two with keyboard if not in RL mode
