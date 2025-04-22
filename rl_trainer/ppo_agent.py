@@ -5,52 +5,23 @@ import torch.nn.functional as F
 import numpy as np
 import gymnasium as gym
 from torch.distributions import Categorical
-
+import matplotlib.pyplot as plt
 from pong_env import PongEnv
 
 
 # Define the neural network architecture
 class PPONetwork(nn.Module):
     def __init__(self):
-        super(PPONetwork, self).__init__()
-
-        # CNN layers to process game screen
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=8, stride=4)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
-        self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
-
-        # Fully connected layers
-        self.fc1 = nn.Linear(64 * 7 * 7, 512)
-
-        # Actor (policy) and critic (value) heads
-        self.actor = nn.Linear(512, 3)  # 3 actions: no-op, up, down
-        self.critic = nn.Linear(512, 1)
+        super().__init__()
+        self.fc1   = nn.Linear(6, 128)
+        self.fc2   = nn.Linear(128, 128)
+        self.actor = nn.Linear(128, 3)   # stay / up / down
+        self.critic = nn.Linear(128, 1)
 
     def forward(self, x):
-        # Reshape input if it's not in the right format
-        if len(x.shape) == 3:
-            x = x.unsqueeze(0)  # Add batch dimension
-        if len(x.shape) == 4 and x.shape[1] == 1:
-            x = x  # Already in correct format (B, C, H, W)
-        else:
-            x = x.permute(0, 3, 1, 2)  # Change from (B, H, W, C) to (B, C, H, W)
-
-        # Apply CNN layers
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-
-        # Flatten
-        x = x.reshape(x.size(0), -1)
-
-        # Apply FC layer
         x = F.relu(self.fc1(x))
-
-        # Get policy and value
-        policy = F.softmax(self.actor(x), dim=1)
-        value = self.critic(x)
-
-        return policy, value
+        x = F.relu(self.fc2(x))
+        return F.softmax(self.actor(x), dim=1), self.critic(x)
 
 class PPOAgent:
     def __init__(self, state_dim, action_dim, lr=0.0003, gamma=0.99, eps_clip=0.2, K_epochs=4):
@@ -69,26 +40,27 @@ class PPOAgent:
         self.MseLoss = nn.MSELoss()
 
     def select_action(self, state, memory=None):
-        with torch.no_grad():
-            state = torch.FloatTensor(state).float().to(self.device)
-            state = state.astype(np.float32)
-            action_probs, state_value = self.policy_old(state)
+        # state comes in as a 1‑D NumPy array (length 6)
+        state_t = torch.tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)  # (1, 6)
 
-        # Sample action from the probability distribution
-        dist = Categorical(action_probs)
-        action = dist.sample()
+        with torch.no_grad():
+            action_probs, state_value = self.policy_old(state_t)
+
+        dist   = Categorical(action_probs)
+        action = dist.sample()              # tensor scalar
 
         if memory is not None:
-            memory.states.append(state)
+            memory.states.append(state_t)   # keep batch dim for later cat()
             memory.actions.append(action)
             memory.logprobs.append(dist.log_prob(action))
-            memory.state_values.append(state_value)
+            memory.state_values.append(state_value.squeeze(0))
 
         return action.item()
 
     def update(self, memory):
         # Monte Carlo estimate of rewards
         rewards = []
+        all_losses = []
         discounted_reward = 0
         for reward, is_terminal in zip(reversed(memory.rewards), reversed(memory.is_terminals)):
             if is_terminal:
@@ -132,8 +104,11 @@ class PPOAgent:
             loss.mean().backward()
             self.optimizer.step()
 
+            all_losses.append(loss.mean().item())
+
         # Copy new weights into old policy
         self.policy_old.load_state_dict(self.policy.state_dict())
+        return np.mean(all_losses)
 
 # Memory class for storing transitions
 class Memory:
@@ -171,8 +146,12 @@ def train_pong():
     # Memory
     memory = Memory()
 
-    # Training loop
+    # Tracking
     timestep = 0
+    episode_rewards = []
+    avg_rewards = []
+    losses = []
+
     for episode in range(max_episodes):
         state, _ = env.reset()
         episode_reward = 0
@@ -193,22 +172,54 @@ def train_pong():
 
             # Update if its time
             if timestep % update_timestep == 0:
+                mean_loss = agent.update(memory)
+                # old_len = len(losses)
                 agent.update(memory)
                 memory.clear_memory()
+                losses.append(mean_loss)
+                # Optional dummy loss value to align plot
+                # losses.extend([None] * (len(episode_rewards) - old_len))
 
             # Update current state and reward
             state = next_state
             episode_reward += reward
 
-        print(f"Episode: {episode}, Reward: {episode_reward}")
+        # Track episode reward
+        episode_rewards.append(episode_reward)
+        avg_reward = np.mean(episode_rewards[-100:])
+        avg_rewards.append(avg_reward)
+
+        print(f"Episode: {episode+1}, Reward: {episode_reward:.2f}, Avg (last 100): {avg_reward:.2f}")
 
         # Save the model
-        if episode % 50 == 0:
-            torch.save(agent.policy.state_dict(), f"pong_policy_episode_{episode}.pth")
-
-
+        if (episode + 1) % 50 == 0:
+            torch.save(agent.policy.state_dict(), f"pong_policy_episode_{episode+1}.pth")
 
     env.close()
+
+    # -------- PLOT RESULTS -------- #
+    plt.figure(figsize=(12, 8))
+
+    plt.subplot(2, 1, 1)
+    plt.plot(episode_rewards, label='Reward')
+    plt.plot(avg_rewards, label='Avg Reward (100 episodes)')
+    plt.title('Rewards per Episode')
+    plt.xlabel('Episode')
+    plt.ylabel('Reward')
+    plt.legend()
+
+    if any(l is not None for l in losses):
+        plt.subplot(2, 1, 2)
+        plt.plot([l for l in losses if l is not None])
+        plt.title('Loss (if captured)')
+        plt.xlabel('Update Step')
+        plt.ylabel('Loss')
+
+    plt.tight_layout()
+    plt.savefig('ppo_training_results.png')
+    plt.show()
+
+
 
 if __name__ == "__main__":
     train_pong()
