@@ -1,5 +1,4 @@
 import argparse
-import os
 import numpy as np
 import torch
 import torch.nn as nn
@@ -37,7 +36,7 @@ class ActorCritic(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         probs = F.softmax(self.actor(x), dim=-1)
-        value = self.critic(x).squeeze(-1)
+        value = self.critic(x).view(-1)
         return probs, value
 
 
@@ -82,7 +81,11 @@ class PPOAgent:
             discounted = reward + self.gamma * discounted
             returns.insert(0, discounted)
         returns = torch.tensor(returns, dtype=torch.float32, device=DEVICE)
-        returns = (returns - returns.mean()) / (returns.std() + 1e-7)
+        std = returns.std()
+        if std == 0 or torch.isnan(std):
+            returns = returns - returns.mean()  # center only
+        else:
+            returns = (returns - returns.mean()) / (std + 1e-7)
 
         # ------- Convert memory to tensors ------- #
         states = torch.stack(memory.states).to(DEVICE)
@@ -93,6 +96,10 @@ class PPOAgent:
         for _ in range(self.k_epochs):
             probs, state_values = self.policy(states)
             probs = torch.clamp(probs, 1e-8, 1.0)
+            if torch.any(torch.isnan(probs)):
+                print("[WARNING] NaNs detected in probs:", probs)
+                probs = torch.ones_like(probs) / probs.shape[-1]  # uniform fallback
+
             dist = Categorical(probs)
             log_probs = dist.log_prob(actions)
             entropy = dist.entropy()
