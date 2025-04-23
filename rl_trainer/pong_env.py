@@ -2,6 +2,7 @@ import gymnasium as gym
 import numpy as np
 import os, time, subprocess
 
+
 class PongEnv(gym.Env):
     metadata = {"render_modes": []}
 
@@ -28,7 +29,7 @@ class PongEnv(gym.Env):
         """
         # 1) Walk upward a few levels (git‑style)
         cur = os.getcwd()
-        for _ in range(4):                              # go up max 4 directories
+        for _ in range(4):  # go up max 4 directories
             candidate = os.path.join(
                 cur, "project_pong_cpp", "build", "project_pong_cpp"
             )
@@ -46,13 +47,12 @@ class PongEnv(gym.Env):
             "Try passing exe_path='./path/to/project_pong_cpp' when you create PongEnv."
         )
 
-
     # ---------- Gym API ---------- #
     def reset(self, seed=None, options=None):
-        if self.proc: self.proc.terminate()
-        os.chmod(self.exe_path, 0o755)
-        self.proc = subprocess.Popen([self.exe_path, "--rl"])
-        time.sleep(1)  # let the window open
+        if self.proc is None:
+            os.chmod(self.exe_path, 0o755)
+            self.proc = subprocess.Popen([self.exe_path, "--rl"])
+            time.sleep(0.5)  # optional minimal wait on first launch
         self.step_count = 0
         state = self._read_state()
         return state, {}
