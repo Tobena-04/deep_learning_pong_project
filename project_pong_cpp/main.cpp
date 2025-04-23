@@ -1,11 +1,15 @@
 #include <chrono>
 #include <SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <cstdlib>
+#include <iostream>
+#include <random>
 #include "include/Ball.h"
 #include "include/Composites.h"
 #include "include/Constants.h"
 #include "include/Paddle.h"
 #include "include/PlayerScore.h"
+#include "include/RLInterface.h"
 
 Contact CheckPaddleCollision(Ball const& ball, Paddle const& paddle)
 {
@@ -83,7 +87,7 @@ Contact CheckWallCollision(Ball const& ball)
     return contact;
 }
 
-int main()
+int main(int argc, char* argv[])  // Added argc and argv parameters for command line arguments
 {
     // Initializing SDL components
     SDL_Init(SDL_INIT_VIDEO);
@@ -93,9 +97,8 @@ int main()
                                           WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // Initialize the font - TODO: change this line
-    TTF_Font* scoreFont = TTF_OpenFont("/Users/tobennaudeze/Library/Fonts/DejaVuSansMono.ttf",
-                                       40);
+    std::string fontPath = std::string(getenv("HOME")) + "/Library/Fonts/DejaVuSansMono.ttf";
+    TTF_Font* scoreFont = TTF_OpenFont(fontPath.c_str(), 40);
 
     // Create the player score text fields
     PlayerScore playerOneScoreText(Vec2(WINDOW_WIDTH/4.0f, 20.0f), renderer, scoreFont);
@@ -109,11 +112,21 @@ int main()
 
     // Create the paddles
     Paddle paddleOne(Vec2(50.0f, (WINDOW_HEIGHT/2.0f)-(PADDLE_HEIGHT/2.0f)),
-            Vec2(0.0f, 0.0f));
+                     Vec2(0.0f, 0.0f));
 
     Paddle paddleTwo(
             Vec2(WINDOW_WIDTH - 50.0f, (WINDOW_HEIGHT/2.0f) - (PADDLE_HEIGHT/2.0f)),
             Vec2(0.0f, 0.0f));
+
+    // Create RL interface for agent training
+    RLInterface rlInterface;
+    bool rl_mode = false;  // Set to true to enable RL agent control
+
+    // Check command line arguments for RL mode
+    if (argc > 1 && std::string(argv[1]) == "--rl") {
+        rl_mode = true;
+        std::cout << "Running in RL training mode" << std::endl;
+    }
 
     // Game logic
     {
@@ -130,15 +143,11 @@ int main()
             auto startTime = std::chrono::high_resolution_clock ::now();
             SDL_Event event;
             while (SDL_PollEvent(&event)){
-                if (event.type == SDL_QUIT || playerOneScore == 10 || playerTwoScore == 10){
+                if (event.type == SDL_QUIT){
                     running = false;
                 } else if (event.type == SDL_KEYDOWN){
                     if (event.key.keysym.sym == SDLK_ESCAPE){
                         running = false;
-                    } else if (event.key.keysym.sym == SDLK_w){
-                        buttons[Buttons::PaddleOneUp] = true;
-                    } else if (event.key.keysym.sym == SDLK_s){
-                        buttons[Buttons::PaddleOneDown] = true;
                     } else if (event.key.keysym.sym == SDLK_UP){
                         buttons[Buttons::PaddleTwoUp] = true;
                     } else if (event.key.keysym.sym == SDLK_DOWN){
@@ -157,21 +166,64 @@ int main()
                 }
             }
 
-            // Change paddle velocity on button press
-            if (buttons[Buttons::PaddleOneUp]){
-                paddleOne.velocity.y = -PADDLE_SPEED;
-            } else if (buttons[Buttons::PaddleOneDown]){
-                paddleOne.velocity.y = PADDLE_SPEED;
-            } else{
-                paddleOne.velocity.y = 0.0f;
+            // Add CPU control logic for paddleOne (before paddle.Update() calls)
+            // CPU paddle logic: Follow the ball's Y position
+            const float cpuPaddleCenter = paddleOne.position.y + (PADDLE_HEIGHT/2.0f);
+            const float ballCenter = ball.position.y + (BALL_HEIGHT/2.0f);
+
+            // 30% chance to make the wrong move (adjust as needed)
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<> dis(-50.0, 50.0);
+            std::bernoulli_distribution mistakeDist(0.3);
+
+            float targetY = ballCenter + dis(gen);
+            bool makeMistake = mistakeDist(gen);
+
+            if (makeMistake) {
+                // Invert the movement logic
+                if (cpuPaddleCenter > targetY + 20.0f) {
+                    paddleOne.velocity.y = PADDLE_SPEED;  // Wrong direction
+                }
+                else if (cpuPaddleCenter < targetY - 20.0f) {
+                    paddleOne.velocity.y = -PADDLE_SPEED;  // Wrong direction
+                }
+            } else {
+                if (cpuPaddleCenter > targetY + 20.0f) {  // Add small threshold to prevent jitter
+                    paddleOne.velocity.y = -PADDLE_SPEED;
+                } else if (cpuPaddleCenter < targetY - 20.0f) {
+                    paddleOne.velocity.y = PADDLE_SPEED;
+                } else {
+                    paddleOne.velocity.y = 0.0f;
+                }
             }
 
-            if (buttons[Buttons::PaddleTwoUp]){
-                paddleTwo.velocity.y = -PADDLE_SPEED;
-            } else if (buttons[Buttons::PaddleTwoDown]){
-                paddleTwo.velocity.y = PADDLE_SPEED;
-            } else{
-                paddleTwo.velocity.y = 0.0f;
+            // Only control paddle two with keyboard if not in RL mode
+            if (!rl_mode) {
+                if (buttons[Buttons::PaddleTwoUp]){
+                    paddleTwo.velocity.y = -PADDLE_SPEED;
+                } else if (buttons[Buttons::PaddleTwoDown]){
+                    paddleTwo.velocity.y = PADDLE_SPEED;
+                } else{
+                    paddleTwo.velocity.y = 0.0f;
+                }
+            }
+
+            // Update the RL interface with current game state
+            if (rl_mode) {
+                rlInterface.updateGameState(ball, paddleOne, paddleTwo, playerOneScore, playerTwoScore);
+
+                // Get action from RL agent (for right paddle)
+                int agent_action = rlInterface.getAgentAction();
+
+                // Apply agent's action to right paddle
+                if (agent_action == 1) {  // Move up
+                    paddleTwo.velocity.y = -PADDLE_SPEED;
+                } else if (agent_action == 2) {  // Move down
+                    paddleTwo.velocity.y = PADDLE_SPEED;
+                } else {  // No move
+                    paddleTwo.velocity.y = 0.0f;
+                }
             }
 
             // Update paddle positions
@@ -182,25 +234,44 @@ int main()
             ball.Update(dt);
 
             // Check collisions
-           if (Contact contact = CheckPaddleCollision(ball, paddleOne);
-           contact.type != CollisionType::None){
-               ball.CollideWithPaddle(contact);
-           } else if (contact = CheckPaddleCollision(ball, paddleTwo);
-           contact.type != CollisionType::None){
-               ball.CollideWithPaddle(contact);
-           } else if (contact = CheckWallCollision(ball);
-           contact.type != CollisionType::None){
-               ball.CollideWithWall(contact);
+            if (Contact contact = CheckPaddleCollision(ball, paddleOne);
+                    contact.type != CollisionType::None){
+                ball.CollideWithPaddle(contact);
+            } else if (contact = CheckPaddleCollision(ball, paddleTwo);
+                    contact.type != CollisionType::None){
+                ball.CollideWithPaddle(contact);
+            } else if (contact = CheckWallCollision(ball);
+                    contact.type != CollisionType::None){
+                ball.CollideWithWall(contact);
 
-               if (contact.type == CollisionType::Left){
-                   ++playerTwoScore;
-                   playerTwoScoreText.SetScore(playerTwoScore);
-                   
-               } else if (contact.type == CollisionType::Right){
-                   ++playerOneScore;
-                   playerOneScoreText.SetScore(playerOneScore);
-               }
-           }
+                if (contact.type == CollisionType::Left){
+                    ++playerTwoScore;
+                    playerTwoScoreText.SetScore(playerTwoScore);
+
+                } else if (contact.type == CollisionType::Right){
+                    ++playerOneScore;
+                    playerOneScoreText.SetScore(playerOneScore);
+                }
+            }
+
+            // Check if game is over
+            if (playerOneScore >= 10 || playerTwoScore >= 10) {
+                if (rl_mode) {
+                    rlInterface.setGameDone(true);
+                    // In RL mode, reset the game instead of quitting
+                    playerOneScore = 0;
+                    playerTwoScore = 0;
+                    playerOneScoreText.SetScore(playerOneScore);
+                    playerTwoScoreText.SetScore(playerTwoScore);
+                    ball.position = Vec2(WINDOW_WIDTH/2.0f, WINDOW_HEIGHT/2.0f);
+                    ball.velocity = Vec2(BALL_SPEED, 0.0f);
+                    paddleOne.position = Vec2(50.0f, (WINDOW_HEIGHT/2.0f)-(PADDLE_HEIGHT/2.0f));
+                    paddleTwo.position = Vec2(WINDOW_WIDTH - 50.0f, (WINDOW_HEIGHT/2.0f) - (PADDLE_HEIGHT/2.0f));
+                    rlInterface.setGameDone(false);  // Reset done flag
+                } else {
+                    running = false;  // Only quit if not in RL mode
+                }
+            }
 
             // Clear the window to black
             SDL_SetRenderDrawColor(renderer, 0x0, 0x0, 0x0, 0xFF);
