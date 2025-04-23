@@ -1,214 +1,266 @@
+import argparse
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-import numpy as np
-import gymnasium as gym
 from torch.distributions import Categorical
-
+import matplotlib.pyplot as plt
+import gymnasium as gym
 from pong_env import PongEnv
 
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Define the neural network architecture
-class PPONetwork(nn.Module):
-    def __init__(self):
-        super(PPONetwork, self).__init__()
 
-        # CNN layers to process game screen
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=8, stride=4)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
-        self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
-
-        # Fully connected layers
-        self.fc1 = nn.Linear(64 * 7 * 7, 512)
-
-        # Actor (policy) and critic (value) heads
-        self.actor = nn.Linear(512, 3)  # 3 actions: no-op, up, down
-        self.critic = nn.Linear(512, 1)
-
-    def forward(self, x):
-        # Reshape input if it's not in the right format
-        if len(x.shape) == 3:
-            x = x.unsqueeze(0)  # Add batch dimension
-        if len(x.shape) == 4 and x.shape[1] == 1:
-            x = x  # Already in correct format (B, C, H, W)
-        else:
-            x = x.permute(0, 3, 1, 2)  # Change from (B, H, W, C) to (B, C, H, W)
-
-        # Apply CNN layers
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-
-        # Flatten
-        x = x.reshape(x.size(0), -1)
-
-        # Apply FC layer
-        x = F.relu(self.fc1(x))
-
-        # Get policy and value
-        policy = F.softmax(self.actor(x), dim=1)
-        value = self.critic(x)
-
-        return policy, value
-
-class PPOAgent:
-    def __init__(self, state_dim, action_dim, lr=0.0003, gamma=0.99, eps_clip=0.2, K_epochs=4):
-        self.gamma = gamma
-        self.eps_clip = eps_clip
-        self.K_epochs = K_epochs
-
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        self.policy = PPONetwork().to(self.device)
-        self.optimizer = optim.Adam(self.policy.parameters(), lr=lr)
-
-        self.policy_old = PPONetwork().to(self.device)
-        self.policy_old.load_state_dict(self.policy.state_dict())
-
-        self.MseLoss = nn.MSELoss()
-
-    def select_action(self, state, memory=None):
-        with torch.no_grad():
-            state = torch.FloatTensor(state).float().to(self.device)
-            state = state.astype(np.float32)
-            action_probs, state_value = self.policy_old(state)
-
-        # Sample action from the probability distribution
-        dist = Categorical(action_probs)
-        action = dist.sample()
-
-        if memory is not None:
-            memory.states.append(state)
-            memory.actions.append(action)
-            memory.logprobs.append(dist.log_prob(action))
-            memory.state_values.append(state_value)
-
-        return action.item()
-
-    def update(self, memory):
-        # Monte Carlo estimate of rewards
-        rewards = []
-        discounted_reward = 0
-        for reward, is_terminal in zip(reversed(memory.rewards), reversed(memory.is_terminals)):
-            if is_terminal:
-                discounted_reward = 0
-            discounted_reward = reward + (self.gamma * discounted_reward)
-            rewards.insert(0, discounted_reward)
-
-        # Normalize the rewards
-        rewards = torch.tensor(rewards, dtype=torch.float32).to(self.device)
-        rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-5)
-
-        # Convert lists to tensors
-        old_states = torch.cat(memory.states).to(self.device).detach()
-        old_actions = torch.cat(memory.actions).to(self.device).detach()
-        old_logprobs = torch.cat(memory.logprobs).to(self.device).detach()
-        old_state_values = torch.cat(memory.state_values).to(self.device).detach()
-
-        # Optimize policy for K epochs
-        for _ in range(self.K_epochs):
-            # Evaluate old actions and values
-            action_probs, state_values = self.policy(old_states)
-            dist = Categorical(action_probs)
-            logprobs = dist.log_prob(old_actions)
-            state_values = state_values.squeeze()
-
-            # Compute ratio (pi_theta / pi_theta__old)
-            ratios = torch.exp(logprobs - old_logprobs.detach())
-
-            # Compute advantage
-            advantages = rewards - old_state_values.detach().squeeze()
-
-            # Compute surrogate losses
-            surr1 = ratios * advantages
-            surr2 = torch.clamp(ratios, 1-self.eps_clip, 1+self.eps_clip) * advantages
-
-            # Final loss
-            loss = -torch.min(surr1, surr2) + 0.5 * self.MseLoss(state_values, rewards) - 0.01 * dist.entropy()
-
-            # Take gradient step
-            self.optimizer.zero_grad()
-            loss.mean().backward()
-            self.optimizer.step()
-
-        # Copy new weights into old policy
-        self.policy_old.load_state_dict(self.policy.state_dict())
-
-# Memory class for storing transitions
+# ----------------------------- Memory Buffer ----------------------------- #
 class Memory:
     def __init__(self):
-        self.states = []
-        self.actions = []
-        self.logprobs = []
-        self.rewards = []
-        self.is_terminals = []
-        self.state_values = []
+        self.states, self.actions, self.log_probs = [], [], []
+        self.rewards, self.is_terminals = [], []
 
-    def clear_memory(self):
-        del self.states[:]
-        del self.actions[:]
-        del self.logprobs[:]
-        del self.rewards[:]
-        del self.is_terminals[:]
-        del self.state_values[:]
+    def clear(self):
+        self.__init__()
 
-# Training function
-def train_pong():
-    # Create environment
-    env = PongEnv()
 
-    # Create agent
-    agent = PPOAgent(
-        state_dim=env.observation_space.shape,
-        action_dim=env.action_space.n
-    )
+# -------------------------- Actor–Critic Network ------------------------- #
+class ActorCritic(nn.Module):
+    def __init__(self, state_dim: int, action_dim: int):
+        super().__init__()
+        hidden = 256
+        self.fc1 = nn.Linear(state_dim, hidden)
+        self.fc2 = nn.Linear(hidden, hidden)
+        self.actor = nn.Linear(hidden, action_dim)
+        self.critic = nn.Linear(hidden, 1)
 
-    # Training parameters
-    max_episodes = 1000
-    update_timestep = 2000
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        probs = F.softmax(self.actor(x), dim=-1)
+        value = self.critic(x).view(-1)
+        return probs, value
 
-    # Memory
+
+# ------------------------------- PPO Agent ------------------------------- #
+class PPOAgent:
+    def __init__(self, state_dim, action_dim, lr=2.5e-4, gamma=0.99, eps_clip=0.2, k_epochs=4):
+        self.gamma = gamma
+        self.eps_clip = eps_clip
+        self.k_epochs = k_epochs
+
+        self.policy = ActorCritic(state_dim, action_dim).to(DEVICE)
+        self.optimizer = optim.Adam(self.policy.parameters(), lr=lr)
+        self.policy_old = ActorCritic(state_dim, action_dim).to(DEVICE)
+        self.policy_old.load_state_dict(self.policy.state_dict())
+        self.mse_loss = nn.MSELoss()
+
+    # ------------------------------------------------------------------ #
+    def select_action(self, state, memory: Memory):
+        state = torch.tensor(state, dtype=torch.float32, device=DEVICE)
+        with torch.no_grad():
+            probs, _ = self.policy_old(state)
+        probs = torch.clamp(probs, 1e-8, 1.0)  # avoid log(0)
+        dist = Categorical(probs)
+        action = dist.sample()
+
+        memory.states.append(state)
+        memory.actions.append(action)
+        memory.log_probs.append(dist.log_prob(action))
+        return action.item()
+
+    # ------------------------------------------------------------------ #
+    def update(self, memory: Memory):
+        if len(memory.rewards) == 0:
+            return np.nan
+
+            # ------- Compute discounted returns ------- #
+        returns = []
+        discounted = 0
+        for reward, is_term in zip(reversed(memory.rewards), reversed(memory.is_terminals)):
+            if is_term:
+                discounted = 0
+            discounted = reward + self.gamma * discounted
+            returns.insert(0, discounted)
+        returns = torch.tensor(returns, dtype=torch.float32, device=DEVICE)
+        std = returns.std()
+        if std == 0 or torch.isnan(std):
+            returns = returns - returns.mean()  # center only
+        else:
+            returns = (returns - returns.mean()) / (std + 1e-7)
+
+        # ------- Convert memory to tensors ------- #
+        states = torch.stack(memory.states).to(DEVICE)
+        actions = torch.stack(memory.actions).to(DEVICE)
+        old_log_probs = torch.stack(memory.log_probs).to(DEVICE)
+
+        losses = []
+        for _ in range(self.k_epochs):
+            probs, state_values = self.policy(states)
+            probs = torch.clamp(probs, 1e-8, 1.0)
+            if torch.any(torch.isnan(probs)):
+                print("[WARNING] NaNs detected in probs:", probs)
+                probs = torch.ones_like(probs) / probs.shape[-1]  # uniform fallback
+
+            dist = Categorical(probs)
+            log_probs = dist.log_prob(actions)
+            entropy = dist.entropy()
+
+            ratios = torch.exp(log_probs - old_log_probs.detach())
+            advantages = returns - state_values.detach()
+            surr1 = ratios * advantages
+            surr2 = torch.clamp(ratios, 1 - self.eps_clip, 1 + self.eps_clip) * advantages
+
+            loss = -torch.min(surr1, surr2).mean() \
+                   + 0.5 * self.mse_loss(state_values, returns) \
+                   - 0.01 * entropy.mean()
+
+            self.optimizer.zero_grad()
+            loss.backward()
+            nn.utils.clip_grad_norm_(self.policy.parameters(), 0.5)
+            self.optimizer.step()
+            losses.append(loss.item())
+
+        self.policy_old.load_state_dict(self.policy.state_dict())
+        return float(np.mean(losses))
+
+
+# ------------------------- Environment Selection ------------------------- #
+
+def make_env(env_name: str):
+    if env_name == "custom":
+        if PongEnv is None:
+            raise RuntimeError("pong_env.py not importable – ensure it exists on PYTHONPATH")
+        return PongEnv()
+    return gym.make(env_name)
+
+
+# ----------------------------- Training Loop ----------------------------- #
+
+def train(cfg):
+    env = make_env(cfg.env)
+    state_dim = env.observation_space.shape[0]
+    action_dim = env.action_space.n
+
+    agent = PPOAgent(state_dim, action_dim,
+                     lr=cfg.lr, gamma=cfg.gamma, eps_clip=cfg.eps_clip)
     memory = Memory()
 
-    # Training loop
+    rewards_history, avg_rewards_history = [], []
+    losses_history, avg_losses_history = [], []
+
     timestep = 0
-    for episode in range(max_episodes):
+    last_loss_value = None
+
+    for ep in range(1, cfg.episodes + 1):
         state, _ = env.reset()
-        episode_reward = 0
+        ep_reward = 0
         done = False
 
+        # --------------- play one episode ---------------
         while not done:
             timestep += 1
-
-            # Select action
             action = agent.select_action(state, memory)
+            next_state, r, done, _, _ = env.step(action)
 
-            # Take action
-            next_state, reward, done, _, _ = env.step(action)
-
-            # Save in memory
-            memory.rewards.append(reward)
+            memory.rewards.append(r)
             memory.is_terminals.append(done)
-
-            # Update if its time
-            if timestep % update_timestep == 0:
-                agent.update(memory)
-                memory.clear_memory()
-
-            # Update current state and reward
             state = next_state
-            episode_reward += reward
+            ep_reward += r
 
-        print(f"Episode: {episode}, Reward: {episode_reward}")
+            # ---- update on schedule ----
+            if timestep % cfg.update_timestep == 0:
+                last_loss_value = agent.update(memory)
+                memory.clear()
+                losses_history.append(last_loss_value)
 
-        # Save the model
-        if episode % 50 == 0:
-            torch.save(agent.policy.state_dict(), f"pong_policy_episode_{episode}.pth")
+        # ---------- force one final update (per-episode) ----------
+        if len(memory.rewards) > 0:
+            last_loss_value = agent.update(memory)
+            memory.clear()
+            losses_history.append(last_loss_value)
 
+        # ---------- record stats ----------
+        rewards_history.append(ep_reward)
+        avg_rewards_history.append(np.mean(rewards_history[-100:]))
 
+        # avoid nan when losses_history is still empty
+        if losses_history:
+            avg_losses_history.append(np.mean(losses_history[-10:]))
+        else:
+            avg_losses_history.append(np.nan)
+
+        # ---------- console log ----------
+        avg_reward_str = f"{avg_rewards_history[-1]:7.2f}"
+        loss_str = (
+            f"{last_loss_value:8.4f}"
+            if last_loss_value is not None and not np.isnan(last_loss_value)
+            else "   --  "
+        )
+        print(
+            f"Ep {ep:4d}/{cfg.episodes} | "
+            f"Reward {ep_reward:8.2f} | "
+            f"Avg(100) {avg_reward_str} | "
+            f"Loss {loss_str}"
+        )
 
     env.close()
 
+    # ---------- draw curves ----------
+    plot_curves(rewards_history, avg_rewards_history,
+                losses_history, avg_losses_history)
+
+
+# ---------------------------- Plotting Helper ---------------------------- #
+
+def plot_curves(rewards, avg_rewards, losses, avg_losses):
+    if len(losses) == 0:
+        print("No loss values recorded – try lowering --update_timestep.")
+        return
+
+    plt.figure(figsize=(12, 8))
+
+    # ---------- rewards ----------
+    plt.subplot(2, 1, 1)
+    plt.plot(rewards, label="Reward")
+    plt.plot(avg_rewards, label="Avg Reward (100 eps)")
+    plt.title("Reward per Episode")
+    plt.xlabel("Episode")
+    plt.ylabel("Reward")
+    plt.legend()
+
+    # ---------- losses ----------
+    plt.subplot(2, 1, 2)
+    plt.plot(losses, label="Loss")
+    plt.plot(avg_losses, label="Avg Loss (last 10)")
+    plt.title("Loss per Update Step")
+    plt.xlabel("Update Step")
+    plt.ylabel("Loss")
+    plt.legend()
+
+    plt.tight_layout()
+    out_path = "ppo_training_results.png"
+    plt.savefig(out_path)
+    print(f"Saved curves to {out_path}")
+    plt.show()
+
+
+# ----------------------------------- CLI --------------------------------- #
+
+def main():
+    parser = argparse.ArgumentParser(description="Train a PPO agent")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    tr = sub.add_parser("train", help="Start training")
+    tr.add_argument("--env", type=str, default="custom", help="Gym env id or 'custom'")
+    tr.add_argument("--episodes", type=int, default=1000)
+    tr.add_argument("--lr", type=float, default=2.5e-4)
+    tr.add_argument("--gamma", type=float, default=0.99)
+    tr.add_argument("--eps_clip", type=float, default=0.2)
+    tr.add_argument("--update_timestep", type=int, default=1024, help="Policy update interval")
+
+    cfg = parser.parse_args()
+    if cfg.cmd == "train":
+        train(cfg)
+
+
 if __name__ == "__main__":
-    train_pong()
+    main()
