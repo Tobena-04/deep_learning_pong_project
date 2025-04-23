@@ -42,3 +42,5 @@ path/*
 *.app
 =======
 .idea/
+
+*.pth
