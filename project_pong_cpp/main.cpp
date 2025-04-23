@@ -171,11 +171,11 @@ int main(int argc, char* argv[])  // Added argc and argv parameters for command 
             const float cpuPaddleCenter = paddleOne.position.y + (PADDLE_HEIGHT/2.0f);
             const float ballCenter = ball.position.y + (BALL_HEIGHT/2.0f);
 
-            // 10% chance to make the wrong move (adjust as needed)
+            // 30% chance to make the wrong move (adjust as needed)
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::uniform_real_distribution<> dis(-30.0, 30.0);
-            std::bernoulli_distribution mistakeDist(0.08);
+            std::uniform_real_distribution<> dis(-50.0, 50.0);
+            std::bernoulli_distribution mistakeDist(0.3);
 
             float targetY = ballCenter + dis(gen);
             bool makeMistake = mistakeDist(gen);
