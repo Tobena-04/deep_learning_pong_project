@@ -1,5 +1,5 @@
 # Deep Learning Pong Project
-
+By Catherine Reller, Fardeen Bablu, and Tobenna Udeza
 This repository contains the learning task for our deep learning network.
 
 ## How to Run Pong
